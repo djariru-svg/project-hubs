@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    /* Twongeyeho transition kugira ngo ihinduke buhoro */
+    @apply bg-bg-gray text-text-dark font-sans antialiased transition-colors duration-300;
+    margin: 0;
+  }
+  
+  /* IYI NI YO IHINDURA PAGE YOSE MU IJORO */
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+    body {
+    @apply bg-bg-gray text-text-dark font-sans antialiased transition-colors duration-300;
+    margin: 0;
+  }
+  
+  /* IYI IHINDURA PAGE YOSE (Background n'inyandiko) */
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-semibold 
+           px-6 py-3 rounded-btn transition-all duration-200 
+           shadow-soft hover:shadow-card;
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-border hover:border-primary text-text-dark 
+           hover:text-primary font-semibold px-6 py-3 rounded-btn 
+           transition-all duration-200;
+  }
+  
+  .btn-ghost {
+    @apply text-primary hover:bg-primary-light font-medium 
+           px-4 py-2 rounded-btn transition-all;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-border rounded-btn 
+           focus:outline-none focus:ring-2 focus:ring-primary 
+           focus:border-transparent transition-all;
+  }
+  
+  .card {
+    @apply bg-surface rounded-card shadow-soft p-6 transition-colors duration-300;
+  }
+
+  /* IYI IHINDURA CARD MU IJORO */
+  .dark .card {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full 
+           text-xs font-medium;
+  }
+    .card {
+    @apply bg-surface rounded-card shadow-soft p-6 transition-colors duration-300;
+  }
+  
+  /* IYI IHINDURA UTUBAHO TWOSE (Cards) */
+  .dark .card {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+  }
+  
+  /* IYI IHINDURA AMAFOROMO YOSE (Inputs) */
+  .dark .input-field {
+    @apply bg-gray-700 border-gray-600 text-white placeholder-gray-400;
+  }
+}
