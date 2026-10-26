@@ -20,10 +20,13 @@
                        seller: project.seller_name,
                        rating: 5.0, // Placeholder kugeza dushyizeho reviews
                        reviews: 0,
-                       price: project.price
+                       price: project.price,
+                       image_url: project.image_url
+
                      }" />
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
@@ -32,6 +35,7 @@ import { ref, onMounted } from 'vue'
 import Navbar from '../components/Navbar.vue'
 import ProjectCard from '../components/ProjectCard.vue'
 import api from '../services/api'
+import Footer from '../components/Footer.vue'
 
 const projects = ref([])
 const isLoading = ref(true)
