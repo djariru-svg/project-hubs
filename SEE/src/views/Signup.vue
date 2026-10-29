@@ -1,67 +1,89 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-bg-gray px-6 py-12">
-    <div class="max-w-lg w-full">
+  <div class="min-h-screen flex bg-surface dark:bg-gray-900 transition-colors duration-300">
+    
+    <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-primary to-purple-700 text-white flex-col justify-between p-12 relative overflow-hidden">
       
-      <!-- Header -->
-      <div class="text-center mb-10">
-        <router-link to="/" class="inline-flex items-center gap-2 mb-4">
-          <div class="bg-primary text-white p-2 rounded-xl font-bold text-xl">PH</div>
-          <span class="text-2xl font-bold text-text-dark">Project Hubs</span>
-        </router-link>
-        <h2 class="text-3xl font-bold text-text-dark">Create an account</h2>
-        <p class="text-text-gray mt-2">Join the marketplace for student developers</p>
+      <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+
+      <router-link to="/" class="relative z-10 flex items-center gap-2">
+        <div class="bg-white text-primary p-2 rounded-xl font-bold text-xl">PH</div>
+        <span class="text-2xl font-bold">Project Hubs</span>
+      </router-link>
+
+      <div class="relative z-10">
+        <h1 class="text-4xl font-bold mb-6 leading-tight">
+          Hindura code yawe mo amafaranga.
+        </h1>
+        <p class="text-white/80 text-lg mb-8">
+          Ifatanye n'umuryango munini w'abanyeshuri ba Africa bakora software. Shyiraho projects zawe, cyangwa iza kugura iz'abandi, utangire kwinjiza amafaranga uyu munsi.
+        </p>
       </div>
 
-      <!-- Card -->
-      <div class="card p-8">
-        <form @submit.prevent="handleSignup" class="space-y-5">
+      <div class="relative z-10 text-sm text-white/60">
+        © 2025 Project Hubs Marketplace.
+      </div>
+    </div>
+
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+      <div class="w-full max-w-md">
+        
+        <div class="lg:hidden text-center mb-8">
+          <router-link to="/" class="inline-flex items-center gap-2">
+            <div class="bg-primary text-white p-2 rounded-xl font-bold text-xl">PH</div>
+            <span class="text-2xl font-bold text-text-dark dark:text-white">Project Hubs</span>
+          </router-link>
+        </div>
+
+        <div class="text-center lg:text-left mb-8">
+          <h2 class="text-3xl font-bold text-text-dark dark:text-white mb-2">Fungura Konti Nshya</h2>
+          <p class="text-text-gray">Tangira kugura no kugurisha projects z'abanyeshuri.</p>
+        </div>
+
+        <form @submit.prevent="handleSignup" class="space-y-4">
           
-          <!-- Full Name -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-1">Full Name</label>
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-1">Amazina Yawe</label>
             <input 
               v-model="form.name" 
               type="text" 
               placeholder="Eric Mugisha" 
-              class="input-field" 
+              class="input-field bg-gray-50 dark:bg-gray-800" 
               required 
             />
           </div>
 
-          <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-1">Email Address</label>
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-1">Email</label>
             <input 
               v-model="form.email" 
               type="email" 
-              placeholder="you@university.edu" 
-              class="input-field" 
+              placeholder="wowe@kaminuza.ac.rw" 
+              class="input-field bg-gray-50 dark:bg-gray-800" 
               required 
             />
           </div>
 
-          <!-- University Dropdown -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-1">University</label>
-            <select v-model="form.university" class="input-field bg-white" required>
-              <option value="" disabled>Select your university</option>
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-1">Kaminuza</label>
+            <select v-model="form.university" class="input-field bg-gray-50 dark:bg-gray-800" required>
+              <option value="" disabled>Hitamo kaminuza yawe</option>
               <option value="UR">University of Rwanda (UR)</option>
               <option value="RP">Rwanda Polytechnic (RP)</option>
               <option value="AUCA">Adventist University of Central Africa (AUCA)</option>
               <option value="CMU">Carnegie Mellon University Africa (CMU)</option>
-              <option value="Other">Other</option>
+              <option value="Other">Indi</option>
             </select>
           </div>
 
-          <!-- Password -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-1">Password</label>
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-1">Password</label>
             <div class="relative">
               <input 
                 v-model="form.password" 
                 :type="showPassword ? 'text' : 'password'" 
-                placeholder="Create a strong password" 
-                class="input-field pr-12" 
+                placeholder="Kora ijambo banga rikomeye" 
+                class="input-field bg-gray-50 dark:bg-gray-800 pr-12" 
                 required 
                 minlength="6"
               />
@@ -76,61 +98,58 @@
             </div>
           </div>
 
-          <!-- Role Selection (Student vs Buyer) -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-3">I am a:</label>
-            <div class="grid grid-cols-2 gap-4">
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-2">Ndi:</label>
+            <div class="grid grid-cols-2 gap-3">
               <label class="cursor-pointer">
                 <input type="radio" v-model="form.role" value="student" class="peer sr-only" />
-                <div class="p-4 rounded-xl border-2 border-border peer-checked:border-primary peer-checked:bg-primary-light transition-all text-center">
-                  <div class="text-2xl mb-1">🎓</div>
-                  <div class="font-semibold text-sm">Student (Seller)</div>
+                <div class="p-3 rounded-xl border border-border dark:border-gray-600 peer-checked:border-primary peer-checked:bg-primary-light dark:peer-checked:bg-primary/20 transition-all text-center">
+                  <div class="text-xl mb-1">🎓</div>
+                  <div class="font-semibold text-xs dark:text-white">Umunyeshuri (Ugurisha)</div>
                 </div>
               </label>
               <label class="cursor-pointer">
                 <input type="radio" v-model="form.role" value="buyer" class="peer sr-only" />
-                <div class="p-4 rounded-xl border-2 border-border peer-checked:border-primary peer-checked:bg-primary-light transition-all text-center">
-                  <div class="text-2xl mb-1">🛒</div>
-                  <div class="font-semibold text-sm">Buyer</div>
+                <div class="p-3 rounded-xl border border-border dark:border-gray-600 peer-checked:border-primary peer-checked:bg-primary-light dark:peer-checked:bg-primary/20 transition-all text-center">
+                  <div class="text-xl mb-1">🛒</div>
+                  <div class="font-semibold text-xs dark:text-white">Umuguzi (Ugura)</div>
                 </div>
               </label>
             </div>
           </div>
 
-          <!-- Terms -->
-          <div class="flex items-start">
-            <input type="checkbox" id="terms" class="mt-1 w-4 h-4 text-primary rounded border-border focus:ring-primary" required />
-            <label for="terms" class="ml-2 text-sm text-text-gray">
-              I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+          <div class="flex items-start mt-4">
+            <input type="checkbox" id="terms" class="mt-1 w-4 h-4 text-primary rounded border-border focus:ring-primary bg-gray-50 dark:bg-gray-800" required />
+            <label for="terms" class="ml-2 text-xs text-text-gray">
+              Ndemeye <a href="#" class="text-primary hover:underline">Amabwiriza</a> na <a href="#" class="text-primary hover:underline">Politiki y'Ibanga</a>
             </label>
           </div>
 
-          <!-- Submit Button -->
           <button 
             type="submit" 
-            class="btn-primary w-full flex justify-center items-center gap-2"
+            class="btn-primary w-full flex justify-center items-center gap-2 mt-2"
             :disabled="isLoading"
           >
             <span v-if="isLoading" class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
-            <span>{{ isLoading ? 'Creating account...' : 'Create Account' }}</span>
+            <span>{{ isLoading ? 'Turakora konti...' : 'Fungura Konti' }}</span>
           </button>
         </form>
+
+        <p class="text-center text-text-gray mt-6 text-sm">
+          Usanzwe ufite konti?
+          <router-link to="/login" class="text-primary font-semibold hover:underline">Injira</router-link>
+        </p>
+
       </div>
-
-      <!-- Footer Link -->
-      <p class="text-center text-text-gray mt-8">
-        Already have an account?
-        <router-link to="/login" class="text-primary font-semibold hover:underline">Sign in</router-link>
-      </p>
-
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import api from '../services/api' // <-- Iyi ni nshya
+import api from '../services/api'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -147,19 +166,17 @@ const isLoading = ref(false)
 
 async function handleSignup() {
   isLoading.value = true
-
+  
   try {
-    // Vugana na Backend
     const response = await api.post('/auth/register', form.value)
-    
-    // Bika umukoresha muri Pinia (State)
     userStore.setUser(response.data.user, response.data.token)
+    alert(`Kwiyandikisha byagenze neza! Murakaza neza, ${response.data.user.name} 🎉`)
     
-    alert('Account created successfully! Welcome to Project Hubs.')
-    router.push('/dashboard')
+    const dashboard = form.value.role === 'buyer' ? '/buyer-dashboard' : '/dashboard'
+    router.push(dashboard)
+    
   } catch (error) {
-    // Garagaza error iyo ibaye (nka niba email isanzweho)
-    alert(error.response?.data?.message || 'Signup failed. Check if backend is running.')
+    alert(error.response?.data?.message || 'Kwiyandikisha byanze')
   } finally {
     isLoading.value = false
   }

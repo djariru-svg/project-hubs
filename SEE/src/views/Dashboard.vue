@@ -4,14 +4,13 @@
     
     <div class="max-w-7xl mx-auto px-6 py-10">
       
-      <!-- HEADER -->
+      <!-- HEADER (Welcome & Role) -->
       <div class="bg-gradient-to-r from-primary to-purple-600 rounded-2xl p-8 text-white mb-8 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <h1 class="text-3xl font-bold mb-2">{{ langStore.t('welcome') }}, {{ userStore.user?.name }}! 👋</h1>
           <p class="text-white/80 text-lg">Project Hubs Marketplace Dashboard</p>
         </div>
         
-        <!-- Role Badge -->
         <div class="bg-white/20 px-6 py-3 rounded-xl backdrop-blur-sm border border-white/30 text-center">
           <span class="block text-xs uppercase tracking-wider text-white/80 mb-1">Uruhare rwawe</span>
           <span class="font-bold text-lg capitalize">
@@ -20,25 +19,25 @@
         </div>
       </div>
 
-      <!-- STATS CARDS (Imibare Nyayo) -->
+      <!-- STATS CARDS -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <!-- 1. Projects -->
+        <!-- 1. Projects (Niba ari seller) -->
         <div class="card border border-border dark:border-gray-700">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-primary-light dark:bg-primary/20 text-primary rounded-full flex items-center justify-center text-2xl">📦</div>
             <div>
-              <p class="text-text-gray text-sm font-medium">Projects Zanjye</p>
+              <p class="text-text-gray dark:text-gray-400 text-sm font-medium">Projects Zanjye</p>
               <h3 class="text-2xl font-bold text-text-dark dark:text-white">{{ stats.totalProjects }}</h3>
             </div>
           </div>
         </div>
 
-        <!-- 2. Earnings -->
+        <!-- 2. Earnings (Niba ari seller) -->
         <div class="card border border-border dark:border-gray-700">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-full flex items-center justify-center text-2xl">💰</div>
             <div>
-              <p class="text-text-gray text-sm font-medium">Amafaranga Yinjiye</p>
+              <p class="text-text-gray dark:text-gray-400 text-sm font-medium">Amafaranga Yinjiye</p>
               <h3 class="text-2xl font-bold text-text-dark dark:text-white">${{ stats.totalEarnings }}</h3>
             </div>
           </div>
@@ -49,8 +48,63 @@
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-warning/10 text-warning rounded-full flex items-center justify-center text-2xl">⭐</div>
             <div>
-              <p class="text-text-gray text-sm font-medium">Amanota (Rating)</p>
+              <p class="text-text-gray dark:text-gray-400 text-sm font-medium">Amanota (Rating)</p>
               <h3 class="text-2xl font-bold text-text-dark dark:text-white">{{ stats.rating }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IBYO UMUKORESHA YAGUZE (My Orders) - Iyi igaragara kuri bose (Seller & Buyer) -->
+      <div v-if="myOrders.length > 0" class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 dark:text-white">Ibyo Waguze (My Orders)</h2>
+
+              <!-- IBYO UMUGURISHA YAGURISHIJE (My Sales) - Igaragara gusa kuri Seller -->
+      <div v-if="userStore.user?.role === 'student' && mySales.length > 0" class="mb-10">
+        <h2 class="text-2xl font-bold mb-6 dark:text-white">Ibyo Wagurishije (My Sales)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="sale in mySales" :key="sale.order_id" class="card border border-border dark:border-gray-700 flex flex-col gap-4">
+            
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shrink-0">
+                 <img v-if="sale.image_url" :src="sale.image_url" class="w-full h-full object-cover" />
+                 <div v-else class="w-full h-full flex items-center justify-center text-2xl">📦</div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg dark:text-white truncate">{{ sale.title }}</h3>
+                <p class="text-sm text-text-gray">Yaguwe na: <strong>{{ sale.buyer_name }}</strong></p>
+                <p class="text-sm text-secondary font-bold mt-1">${{ sale.amount }}</p>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-auto pt-4 border-t border-border dark:border-gray-700">
+              <span class="badge bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Yaguzwe</span>
+              <a :href="`mailto:${sale.buyer_email}`" class="text-primary text-sm font-semibold hover:underline">
+                Andikira Umuguzi
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="order in myOrders" :key="order.order_id" class="card border border-border dark:border-gray-700 flex flex-col gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden shrink-0">
+                 <img v-if="order.image_url" :src="order.image_url" class="w-full h-full object-cover" />
+                 <div v-else class="w-full h-full flex items-center justify-center text-2xl">📦</div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-lg dark:text-white truncate">{{ order.title }}</h3>
+                <p class="text-sm text-text-gray">by {{ order.seller_name }}</p>
+                <p class="text-sm text-secondary font-bold mt-1">${{ order.amount }}</p>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center mt-auto pt-4 border-t border-border dark:border-gray-700">
+              <span class="badge bg-secondary/10 text-secondary">Yaguwe</span>
+              <router-link :to="`/project/${order.project_id}`" class="text-primary text-sm font-semibold hover:underline">
+                Reba Project →
+              </router-link>
             </div>
           </div>
         </div>
@@ -58,8 +112,8 @@
 
       <!-- ACTION CARDS -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Sell Card -->
-        <div class="card border border-border dark:border-gray-700 flex flex-col justify-between hover:border-primary transition-colors">
+        <!-- Sell Card (Igaragara gusa kuri Seller/Student) -->
+        <div v-if="userStore.user?.role === 'student'" class="card border border-border dark:border-gray-700 flex flex-col justify-between hover:border-primary transition-colors">
           <div>
             <h2 class="text-xl font-bold mb-2 dark:text-white">Ufite project ushaka kugurisha?</h2>
             <p class="text-text-gray mb-6">Shyira project yawe kuri Project Hubs kugira ngo abandi bayibone.</p>
@@ -69,7 +123,7 @@
           </router-link>
         </div>
 
-        <!-- Browse Card -->
+        <!-- Browse Card (Igaragara kuri bose) -->
         <div class="card border border-border dark:border-gray-700 flex flex-col justify-between hover:border-secondary transition-colors">
           <div>
             <h2 class="text-xl font-bold mb-2 dark:text-white">Ushaka kugura project?</h2>
@@ -97,26 +151,42 @@ const userStore = useUserStore()
 const langStore = useLanguageStore()
 const router = useRouter()
 
-// 1. Ibi ni ibice bibika imibare (Stats)
+// Stats
 const stats = ref({
   totalProjects: 0,
-  totalEarnings: 0,
+  totalEarnings: 0, // Iyi tuzayihindura nayo ivuye muri API
   rating: 'Nta Manota'
 })
 
-// 2. Iyi function isaba backend imibare iyo page ifungutse
+// Ibyo umukoresha yaguze (nka Buyer)
+const myOrders = ref([])
+
+// Ibyo umukoresha yagurishije (nka Seller)
+const mySales = ref([]) // <-- ONGERAHO IYI
+
 onMounted(async () => {
-  // Reba niba atinjiye, mujyane kuri login
   if (!userStore.isLoggedIn) {
     router.push('/login')
     return
   }
 
   try {
-    const response = await api.get('/projects/my/stats')
-    stats.value = response.data // Bika imibare ya backend
+    // 1. Fata Stats z'umukoresha
+    const statsRes = await api.get('/projects/my/stats')
+    stats.value = statsRes.data 
+    
+    // 2. Fata ibyo umukoresha yaguze (Buyer)
+    const ordersRes = await api.get('/orders/my-orders')
+    myOrders.value = ordersRes.data
+
+    // 3. Fata ibyo umukoresha yagurishije (Seller)
+    if (userStore.user?.role === 'student') {
+      const salesRes = await api.get('/orders/my-sales')
+      mySales.value = salesRes.data.sales
+      stats.value.totalEarnings = salesRes.data.totalEarnings // Hindura amafaranga yinjiye
+    }
   } catch (error) {
-    console.error('Error fetching stats:', error)
+    console.error('Error fetching data:', error)
   }
 })
 </script>

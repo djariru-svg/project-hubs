@@ -1,0 +1,25 @@
+{
+  "name": "scratch2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+ "scripts": {
+    "dev": "concurrently \"npm run dev --prefix hide\" \"npm run dev --prefix see\"",
+    "start": "concurrently \"npm start --prefix hide\" \"npm run build --prefix see\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djariru-svg/project-hubs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/djariru-svg/project-hubs/issues"
+  },
+  "homepage": "https://github.com/djariru-svg/project-hubs#readme",
+  "dependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

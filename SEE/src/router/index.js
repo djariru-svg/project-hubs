@@ -1,63 +1,89 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const routes = [
-  { 
-    path: '/', 
-    name: 'Home', 
-    component: () => import('../views/Home.vue') 
+  // ========== PUBLIC ROUTES ==========
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('../views/Home.vue')
   },
-  { 
-    path: '/login', 
-    name: 'Login', 
-    component: () => import('../views/Login.vue') 
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue'),
+    meta: { guestOnly: true } // ← Gusa abatari logged in
   },
-  { 
-    path: '/signup', 
-    name: 'Signup', 
-    component: () => import('../views/Signup.vue') 
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: () => import('../views/Signup.vue'),
+    meta: { guestOnly: true }
   },
-  { 
-    path: '/browse', 
-    name: 'Browse', 
-    component: () => import('../views/Browse.vue') 
+  {
+    path: '/browse',
+    name: 'Browse',
+    component: () => import('../views/Browse.vue')
   },
-  { 
-    path: '/project/:id', 
-    name: 'ProjectDetail', 
-    component: () => import('../views/ProjectDetail.vue') 
+  {
+    path: '/project/:id',
+    name: 'ProjectDetail',
+    component: () => import('../views/ProjectDetail.vue')
   },
-  { 
-    path: '/sell', 
-    name: 'Sell', 
-    component: () => import('../views/Sell.vue') 
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/About.vue')
   },
-  { 
-    path: '/cart', 
-    name: 'Cart', 
-    component: () => import('../views/Cart.vue') 
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('../views/Contact.vue')
   },
-  { 
-    path: '/dashboard', 
-    name: 'Dashboard', 
-    component: () => import('../views/Dashboard.vue') 
+  
+  // ========== AUTHENTICATED ROUTES ==========
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: () => import('../views/Cart.vue'),
+    meta: { requiresAuth: true }
   },
-  // IZI NZIYA
-  { 
-    path: '/about', 
-    name: 'About', 
-    component: () => import('../views/About.vue') 
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import('../views/Checkout.vue'),
+    meta: { requiresAuth: true }
   },
-  { 
-    path: '/contact', 
-    name: 'Contact', 
-    component: () => import('../views/Contact.vue') 
+  {
+    path: '/buyer-dashboard',
+    name: 'BuyerDashboard',
+    component: () => import('../views/BuyerDashboard.vue'),
+    meta: { requiresAuth: true, role: 'buyer' } // ← Buyer only
   },
-  // 404 (Iyi igomba kuba iheruka buri gihe)
-  { 
-    path: '/:pathMatch(.*)*', 
-    name: 'NotFound', 
-    component: () => import('../views/NotFound.vue') 
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/Dashboard.vue'),
+    meta: { requiresAuth: true, role: 'student' } // ← Seller only
   },
+  {
+    path: '/sell',
+    name: 'Sell',
+    component: () => import('../views/Sell.vue'),
+    meta: { requiresAuth: true, role: 'student' } // ← Seller only
+  },
+    { 
+    path: '/settings', 
+    name: 'Settings', 
+    component: () => import('../views/Settings.vue') 
+  },
+  
+  // ========== 404 ==========
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue')
+  }
 ]
 
 const router = createRouter({
@@ -65,22 +91,48 @@ const router = createRouter({
   routes,
   scrollBehavior() {
     return { top: 0 }
-  },
+  }
 })
 
 // ==========================================
-// UMUZAMU (ROUTE GUARD)
+// ROUTE GUARD YUZUYE
 // ==========================================
-// Iyi code ireba niba umukoresha afite Token mbere yo kumureka kujya kuri Dashboard cyangwa Sell
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
+  const userStore = useUserStore()
   
-  // Niba ashatse kujya kuri 'Sell' cyangwa 'Dashboard' ariko nta Token afite
-  if ((to.name === 'Sell' || to.name === 'Dashboard') && !token) {
-    next({ name: 'Login' }); // Mujyane kuri Login
-  } else {
-    next(); // Reka agende
+  // 1. Niba page isaba authentication kandi user ntiyinjiriye
+  if (to.meta.requiresAuth && !token) {
+    return next({ 
+      name: 'Login', 
+      query: { redirect: to.fullPath }
+    })
   }
-});
+  
+  // 2. Niba page ari iy'abashyitsi gusa kandi user yinjiye
+  if (to.meta.guestOnly && token) {
+    const userRole = userStore.user?.role
+    if (userRole === 'buyer') {
+      return next({ name: 'BuyerDashboard' })
+    } else {
+      return next({ name: 'Dashboard' })
+    }
+  }
+  
+  // 3. Kugenzura role
+  if (to.meta.role && token) {
+    const userRole = userStore.user?.role
+    
+    if (userRole !== to.meta.role) {
+      if (userRole === 'buyer') {
+        return next({ name: 'BuyerDashboard' })
+      } else {
+        return next({ name: 'Dashboard' })
+      }
+    }
+  }
+  
+  next()
+})
 
 export default router

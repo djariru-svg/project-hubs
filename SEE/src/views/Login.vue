@@ -1,49 +1,85 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-bg-gray px-6 py-12">
-    <div class="max-w-md w-full">
+  <div class="min-h-screen flex bg-surface dark:bg-gray-900 transition-colors duration-300">
+    
+    <!-- IBUMOSO: Brand & Marketing (Bihishe kuri telefone) -->
+    <div class="hidden lg:flex w-1/2 bg-gradient-to-br from-primary to-purple-700 text-white flex-col justify-between p-12 relative overflow-hidden">
       
-      <!-- Header -->
-      <div class="text-center mb-10">
-        <router-link to="/" class="inline-flex items-center gap-2 mb-4">
-          <div class="bg-primary text-white p-2 rounded-xl font-bold text-xl">PH</div>
-          <span class="text-2xl font-bold text-text-dark">Project Hubs</span>
-        </router-link>
-        <h2 class="text-3xl font-bold text-text-dark">Welcome back</h2>
-        <p class="text-text-gray mt-2">Sign in to your account to continue</p>
+      <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+
+      <router-link to="/" class="relative z-10 flex items-center gap-2">
+        <div class="bg-white text-primary p-2 rounded-xl font-bold text-xl">PH</div>
+        <span class="text-2xl font-bold">Project Hubs</span>
+      </router-link>
+
+      <div class="relative z-10">
+        <h1 class="text-4xl font-bold mb-6 leading-tight">
+          Isoko ry'umwihariko ku banyeshuri ba Africa bakora software.
+        </h1>
+        <p class="text-white/80 text-lg mb-8">
+          Gurisha kandi ugure software nziza, embedded systems, na AI models zakozwe n'abanyeshuri b'ingeri ya mbere muri kaminuza.
+        </p>
+        
+        <div class="flex items-center gap-4">
+          <div class="flex -space-x-3">
+            <div class="w-10 h-10 rounded-full bg-orange-400 border-2 border-primary flex items-center justify-center font-bold">E</div>
+            <div class="w-10 h-10 rounded-full bg-green-400 border-2 border-primary flex items-center justify-center font-bold text-primary">D</div>
+            <div class="w-10 h-10 rounded-full bg-blue-400 border-2 border-primary flex items-center justify-center font-bold">J</div>
+          </div>
+          <p class="text-sm text-white/90">Ifatanye n'abanyeshuri 1,000+ basanzwe bacuruza.</p>
+        </div>
       </div>
 
-      <!-- Card -->
-      <div class="card p-8">
-        <!-- Error Message -->
-        <div v-if="errorMsg" class="mb-4 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm text-center font-medium">
+      <div class="relative z-10 text-sm text-white/60">
+        © 2025 Project Hubs Marketplace.
+      </div>
+    </div>
+
+    <!-- IBURYO: Ifishi (Form) -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+      <div class="w-full max-w-md">
+        
+        <div class="lg:hidden text-center mb-10">
+          <router-link to="/" class="inline-flex items-center gap-2">
+            <div class="bg-primary text-white p-2 rounded-xl font-bold text-xl">PH</div>
+            <span class="text-2xl font-bold text-text-dark dark:text-white">Project Hubs</span>
+          </router-link>
+        </div>
+
+        <div class="text-center lg:text-left mb-8">
+          <h2 class="text-3xl font-bold text-text-dark dark:text-white mb-2">Murakaza neza</h2>
+          <p class="text-text-gray">Injira mu konti yawe kugira ngo ukomeze.</p>
+        </div>
+
+        <div v-if="errorMsg" class="mb-6 p-3 rounded-lg bg-danger/10 border border-danger/20 text-danger text-sm font-medium">
           {{ errorMsg }}
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-5">
           <!-- Email -->
           <div>
-            <label class="block text-sm font-medium text-text-dark mb-1">Email Address</label>
+            <label class="block text-sm font-medium text-text-dark dark:text-gray-300 mb-2">Email</label>
             <input 
               v-model="form.email" 
               type="email" 
-              placeholder="you@university.edu" 
-              class="input-field" 
+              placeholder="wowe@kaminuza.ac.rw" 
+              class="input-field bg-gray-50 dark:bg-gray-800" 
               required 
             />
           </div>
 
           <!-- Password -->
           <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="block text-sm font-medium text-text-dark">Password</label>
-              <a href="#" class="text-sm text-primary hover:underline font-medium">Forgot password?</a>
+            <div class="flex justify-between items-center mb-2">
+              <label class="block text-sm font-medium text-text-dark dark:text-gray-300">Password</label>
+              <a href="#" class="text-sm text-primary hover:underline font-medium">Wibagiwe?</a>
             </div>
             <div class="relative">
               <input 
                 v-model="form.password" 
                 :type="showPassword ? 'text' : 'password'" 
                 placeholder="••••••••" 
-                class="input-field pr-12" 
+                class="input-field bg-gray-50 dark:bg-gray-800 pr-12" 
                 required 
               />
               <button 
@@ -57,42 +93,40 @@
             </div>
           </div>
 
-          <!-- Remember Me -->
+          <!-- Remember -->
           <div class="flex items-center">
-            <input type="checkbox" id="remember" class="w-4 h-4 text-primary rounded border-border focus:ring-primary" />
-            <label for="remember" class="ml-2 text-sm text-text-gray">Remember me</label>
+            <input type="checkbox" id="remember" class="w-4 h-4 text-primary rounded border-border focus:ring-primary bg-gray-50 dark:bg-gray-800" />
+            <label for="remember" class="ml-2 text-sm text-text-gray">Unyibuke</label>
           </div>
 
-          <!-- Submit Button -->
           <button 
             type="submit" 
-            class="btn-primary w-full flex justify-center items-center gap-2"
+            class="btn-primary w-full flex justify-center items-center gap-2 mt-4"
             :disabled="isLoading"
           >
             <span v-if="isLoading" class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
-            <span>{{ isLoading ? 'Signing in...' : 'Sign In' }}</span>
+            <span>{{ isLoading ? 'Turacyinjira...' : 'Injira' }}</span>
           </button>
         </form>
+
+        <p class="text-center text-text-gray mt-8">
+          Nta konti ufite?
+          <router-link to="/signup" class="text-primary font-semibold hover:underline">Kora indi nshya</router-link>
+        </p>
+
       </div>
-
-      <!-- Footer Link -->
-      <p class="text-center text-text-gray mt-8">
-        Don't have an account?
-        <router-link to="/signup" class="text-primary font-semibold hover:underline">Create one</router-link>
-      </p>
-
     </div>
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import api from '../services/api' // <-- Iyi ni nshya
+import api from '../services/api'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 
 const form = ref({ email: '', password: '' })
@@ -103,17 +137,18 @@ const errorMsg = ref('')
 async function handleLogin() {
   errorMsg.value = ''
   isLoading.value = true
-
+  
   try {
-    // Vugana na Backend
     const response = await api.post('/auth/login', form.value)
-    
-    // Bika umukoresha muri Pinia
     userStore.setUser(response.data.user, response.data.token)
+    alert(`Murakaza neza, ${response.data.user.name}! 👋`)
     
-    router.push('/dashboard')
+    const redirectPath = route.query.redirect || 
+                        (response.data.user.role === 'buyer' ? '/buyer-dashboard' : '/dashboard')
+    router.push(redirectPath)
+    
   } catch (error) {
-    errorMsg.value = error.response?.data?.message || 'Login failed. Check backend connection.'
+    errorMsg.value = error.response?.data?.message || 'Kwinjira byanze. Reba email na password.'
   } finally {
     isLoading.value = false
   }

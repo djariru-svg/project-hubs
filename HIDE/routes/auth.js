@@ -5,47 +5,6 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 require('dotenv').config();
 
-// ==========================================
-// @route   POST /api/auth/register
-// @desc    Kwiyandikisha (Register a new user)
-// @access  Public
-// ==========================================
-router.post('/register', async (req, res) => {
-  const { name, email, password, university, role } = req.body;
-
-  try {
-    // 1. Kureba niba umukoresha asanzwe ahari (Check if user exists)
-    const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (existingUser.length > 0) {
-      return res.status(400).json({ message: 'Uyu mukoresha asanzwe yiyandikishije (User already exists)' });
-    }
-
-    // 2. Guhisha ijambo banga (Hash password)
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // 3. Kubika umukoresha muri database (Insert user into DB)
-    const [result] = await db.query(
-      'INSERT INTO users (name, email, password, university, role) VALUES (?, ?, ?, ?, ?)',
-      [name, email, hashedPassword, university, role || 'student']
-    );
-
-    // 4. Gukora Token (Create JWT Token)
-    const payload = { user: { id: result.insertId, role: role || 'student' } };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-    // 5. Gusubiza Frontend (Return response)
-    res.status(201).json({
-      message: 'Umukoresha yiyandikishije neza (User registered successfully)',
-      token,
-      user: { id: result.insertId, name, email, university, role: role || 'student' }
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Hari ikibazo kuri server (Server error)' });
-  }
-});
 
 // ==========================================
 // @route   POST /api/auth/login
@@ -84,6 +43,57 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Hari ikibazo kuri server (Server error)' });
+  }
+});
+
+
+// ==========================================
+// @route   PUT /api/auth/profile
+// @desc    Kuvugurura umwirondoro (Update profile)
+// @access  Private
+// ==========================================
+router.put('/profile', async (req, res) => {
+  // Turacyashyizeho authMiddleware hano, ariko tuzayishyiraho mu gihe kizaza
+  // Ubu turafata ID mu mutwe (headers) cyangwa muri token niba tuyifite
+  
+  // Kugira ngo dukoreshe token, reka dukoreshe iyi uburyo bworoshye:
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ message: 'Nta token yatanzwe' });
+  
+  const token = authHeader.split(' ')[1];
+  
+  try {
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.user.id;
+
+    const { name, university, password } = req.body;
+
+    // 1. Niba ashaka guhindura password
+    if (password && password.trim() !== '') {
+      const bcrypt = require('bcryptjs');
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      
+      await db.query(
+        'UPDATE users SET name = ?, university = ?, password = ? WHERE id = ?',
+        [name, university, hashedPassword, userId]
+      );
+    } else {
+      // 2. Niba adahindura password
+      await db.query(
+        'UPDATE users SET name = ?, university = ? WHERE id = ?',
+        [name, university, userId]
+      );
+    }
+
+    // Fata amakuru mashya yo kumusubiza
+    const [users] = await db.query('SELECT id, name, email, university, role FROM users WHERE id = ?', [userId]);
+    
+    res.json({ message: 'Umwirondoro wahinduwe neza!', user: users[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error cyangwa Token ntiyemewe' });
   }
 });
 
