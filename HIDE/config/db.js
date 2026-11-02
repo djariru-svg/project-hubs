@@ -6,11 +6,15 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306, 
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  enableKeepAlive: true, // <-- IYI IREKA CONNECTION ITAZIMA
-  keepAliveInitialDelay: 0
+  enableKeepAlive: true,
+  // ⚠️ IYI NI YO IKEMURA "CONNECTION REFUSED"
+  ssl: {
+    rejectUnauthorized: false 
+  }
 });
 
 // Test connection
@@ -18,7 +22,7 @@ pool.getConnection((err, connection) => {
   if (err) {
     console.error('❌ DB Connection Failed:', err.message);
   } else {
-    console.log('✅ Connected to MySQL Database (project_hubs)');
+    console.log('✅ Connected to Aiven MySQL Database');
     connection.release();
   }
 });
